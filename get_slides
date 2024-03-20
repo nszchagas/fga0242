@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+rs=$(find . -mindepth 2 -maxdepth 2 -type f  | grep README )
+
+
+for r in $rs; do 
+    read=$r
+    slide=$(grep slide.*http -i $read | awk -F '(' '{print $2}'| tr -d '()')
+    if [ -n "$slide" ]; then
+	aula=$(echo $r | awk -F '/' '{print $2}')
+	echo "$aula: $slide"
+	url=$(echo $slide | sed -e 's|edit.*|export\/pdf|g')
+	pdf_url=$(curl --silent $url | grep -oP '(?<=HREF=")(.*)(?=")')
+	curl --silent --output "$aula.pdf" $pdf_url 
+	
+    fi    
+done 
+
