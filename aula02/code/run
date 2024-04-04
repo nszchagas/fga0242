@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if ! [ -f junit-4.13.2.jar ]; then
+  echo -e "Getting junit...\n"
+  wget https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar
+fi
+
+echo -e "Cleaning old compiled classes\n"
+rm ./*.class 2>/dev/null || echo "No files to remove"
+
+echo -e "Compiling Main class:\n"
+javac -cp .:junit-4.13.2.jar Main.java || exit 1
+
+echo -e "Running class \n"
+java Main || exit 1
+
+echo -e "Cleaning classes.."
+rm ./*.class 2>/dev/null
+
+echo "Finished"
